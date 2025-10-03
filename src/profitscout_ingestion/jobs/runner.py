@@ -1,7 +1,7 @@
 """CLI runner for ingestion jobs.
 
-Dispatches to specific pipelines (e.g., prices) or runs a noop.
-This keeps external imports minimal and is safe to land early.
+Dispatches to specific pipelines (noop|prices|options).
+Keeps imports lazy so early PRs don’t break if a package isn’t present yet.
 """
 
 from __future__ import annotations
@@ -14,11 +14,16 @@ import sys
 from typing import Optional
 
 
-# Lazy import to avoid hard dependency if the pipeline package isn't present yet.
 def _import_prices_run():
     from profitscout_ingestion.pipelines.prices.pipeline import run as prices_run
 
     return prices_run
+
+
+def _import_options_run():
+    from profitscout_ingestion.pipelines.options.pipeline import run as options_run
+
+    return options_run
 
 
 def _utc_now_iso() -> str:
@@ -50,7 +55,7 @@ def main(argv: Optional[list[str]] = None) -> int:
     """Parse args and run the requested ingestion pipeline."""
     parser = argparse.ArgumentParser(description="ProfitScout ingestion runner.")
     parser.add_argument(
-        "--pipeline", type=str, default="noop", help="Pipeline to run (noop|prices)."
+        "--pipeline", type=str, default="noop", help="Pipeline to run (noop|prices|options)."
     )
     parser.add_argument(
         "--run-date",
@@ -80,6 +85,13 @@ def main(argv: Optional[list[str]] = None) -> int:
         tickers = _parse_tickers(args.tickers)
         counters = prices_run(run_date=args.run_date, tickers=tickers)
         _log("end", pipeline="prices", run_date=args.run_date, status="ok", **counters)
+        return 0
+
+    if args.pipeline == "options":
+        options_run = _import_options_run()
+        tickers = _parse_tickers(args.tickers)
+        counters = options_run(run_date=args.run_date, tickers=tickers)
+        _log("end", pipeline="options", run_date=args.run_date, status="ok", **counters)
         return 0
 
     _log(
