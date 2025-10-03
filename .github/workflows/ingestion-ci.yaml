@@ -38,7 +38,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        pipeline: [noop, prices, options]
+        pipeline: [noop, prices, options, calendar]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
