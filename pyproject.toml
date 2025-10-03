@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "profitscout"
+version = "0.1.0"
+description = "ProfitScout monorepo scaffold"
+requires-python = ">=3.11"
+readme = "README.md"
+license = {text = "Apache-2.0"}  # adjust if you chose MIT
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+lint.select = ["E","F","W","I","D"]   # pycodestyle/pyflakes/isort/pydocstyle basics
+lint.ignore = ["D100","D104"]         # skip module/package docstring required (adjust later)
+exclude = ["dist","build",".venv"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
