@@ -1,7 +1,7 @@
 """CLI runner for ingestion jobs.
 
-Dispatches to specific pipelines (noop|prices|options).
-Keeps imports lazy so early PRs don’t break if a package isn’t present yet.
+Dispatches to specific pipelines (noop|prices|options|calendar).
+Imports are lazy so early PRs don’t break if a package isn’t present yet.
 """
 
 from __future__ import annotations
@@ -24,6 +24,12 @@ def _import_options_run():
     from profitscout_ingestion.pipelines.options.pipeline import run as options_run
 
     return options_run
+
+
+def _import_calendar_run():
+    from profitscout_ingestion.pipelines.calendar.pipeline import run as calendar_run
+
+    return calendar_run
 
 
 def _utc_now_iso() -> str:
@@ -55,7 +61,10 @@ def main(argv: Optional[list[str]] = None) -> int:
     """Parse args and run the requested ingestion pipeline."""
     parser = argparse.ArgumentParser(description="ProfitScout ingestion runner.")
     parser.add_argument(
-        "--pipeline", type=str, default="noop", help="Pipeline to run (noop|prices|options)."
+        "--pipeline",
+        type=str,
+        default="noop",
+        help="Pipeline to run (noop|prices|options|calendar).",
     )
     parser.add_argument(
         "--run-date",
@@ -92,6 +101,12 @@ def main(argv: Optional[list[str]] = None) -> int:
         tickers = _parse_tickers(args.tickers)
         counters = options_run(run_date=args.run_date, tickers=tickers)
         _log("end", pipeline="options", run_date=args.run_date, status="ok", **counters)
+        return 0
+
+    if args.pipeline == "calendar":
+        calendar_run = _import_calendar_run()
+        counters = calendar_run(run_date=args.run_date)
+        _log("end", pipeline="calendar", run_date=args.run_date, status="ok", **counters)
         return 0
 
     _log(
