@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg*
+.build/
+dist/
+build/
+.eggs/
+.venv/
+.venv*/
+venv/
+pip-wheel-metadata/
+
+# VCS / IDE
+.git/
+.gitignore
+*.swp
+*.swo
+*.idea/
+.vscode/
+
+# Test & coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Node (just in case)
+node_modules/
+
+# Local env files
+.env
+.env.*
