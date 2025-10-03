@@ -39,13 +39,25 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Smoke: default CMD (noop)
-        run: docker run --rm ingestion-ci:${{ github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker run --rm "ingestion-ci:${{ github.sha }}"
 
       - name: Smoke: prices stub
-        run: docker run --rm ingestion-ci:${{ github.sha }} --pipeline prices --run-date $(date +%F)
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker run --rm "ingestion-ci:${{ github.sha }}" --pipeline prices --run-date "$(date +%F)"
 
       - name: Smoke: options stub
-        run: docker run --rm ingestion-ci:${{ github.sha }} --pipeline options --run-date $(date +%F)
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker run --rm "ingestion-ci:${{ github.sha }}" --pipeline options --run-date "$(date +%F)"
 
       - name: Smoke: calendar stub
-        run: docker run --rm ingestion-ci:${{ github.sha }} --pipeline calendar --run-date $(date +%F)
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker run --rm "ingestion-ci:${{ github.sha }}" --pipeline calendar --run-date "$(date +%F)"
