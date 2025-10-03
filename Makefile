@@ -21,3 +21,7 @@ run_prices:
 
 run_options:
 	@python -m profitscout_ingestion.jobs.runner --pipeline options --run-date $$(date +%F) $(ARGS)
+
+
+run_calendar:
+	@python -m profitscout_ingestion.jobs.runner --pipeline calendar --run-date $$(date +%F) $(ARGS)
