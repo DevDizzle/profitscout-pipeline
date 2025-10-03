@@ -38,26 +38,12 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Smoke: default CMD (noop)
+      # Single smoke step to avoid YAML parsing issues across multiple run blocks
+      - name: Smoke all stubs
         shell: bash
         run: |
           set -euo pipefail
           docker run --rm "ingestion-ci:${{ github.sha }}"
-
-      - name: Smoke: prices stub
-        shell: bash
-        run: |
-          set -euo pipefail
           docker run --rm "ingestion-ci:${{ github.sha }}" --pipeline prices --run-date "$(date +%F)"
-
-      - name: Smoke: options stub
-        shell: bash
-        run: |
-          set -euo pipefail
           docker run --rm "ingestion-ci:${{ github.sha }}" --pipeline options --run-date "$(date +%F)"
-
-      - name: Smoke: calendar stub
-        shell: bash
-        run: |
-          set -euo pipefail
           docker run --rm "ingestion-ci:${{ github.sha }}" --pipeline calendar --run-date "$(date +%F)"

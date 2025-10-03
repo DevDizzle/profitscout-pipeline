@@ -17,6 +17,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # App directory
 WORKDIR /app
 
+# Make src importable
+ENV PYTHONPATH=/app/src
+
 # (Optional) If/when you add runtime deps to pyproject, copy it here first for layer caching:
 # COPY pyproject.toml ./
 # RUN pip install --upgrade pip && pip install .
